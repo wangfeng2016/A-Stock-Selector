@@ -1,2 +1,6 @@
 1.Camel 
-2.No abbr
+2.No abbrevation unless it is well known 
+3.Comments for function
+	a. usuage
+	b. parameters
+	c. return value
