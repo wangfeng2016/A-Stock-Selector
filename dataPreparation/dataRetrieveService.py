@@ -13,15 +13,15 @@ import requests;
 import re;
 
 class dataRetrieveService():
-	def getStockCodes():
+	def getStockCodes(self):
 		print "not implemented"
 
-	def getStockNameByCode(code):
+	def getStockNameByCode(self, code):
 		print "not implemented"
 
-	def getQuoteByCode(code):
+	def getQuoteByCode(self, code):
 		print "not implemented"
 
-	def getHistoryQuoteByCode(code):
+	def getHistoryQuoteByCode(self, code):
 		print "not implemented"
 
