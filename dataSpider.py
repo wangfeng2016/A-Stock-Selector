@@ -3,11 +3,11 @@ dataSpider class for dealing with configuration file and its content.
 '''
 
 from __future__ import print_function, unicode_literals
-import mock
 
 _convertDictUnicode = lambda dictInst: dictInst
 
-from configparser import RawConfigParser
+from ConfigParser import RawConfigParser
+
 from utils.pathtools import *
 import os
 import logging
