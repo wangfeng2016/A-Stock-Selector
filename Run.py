@@ -6,8 +6,7 @@ Created on Jan, 13, 2016
 
 #from utils.pathtool import *
 
-from utils.pathtools import *
-from utils.execute import *
+
 from dataSpider import * 
 
 import os.path
@@ -18,9 +17,10 @@ if __name__ == '__main__':
         exit
     else:
         print ("Start to read the configuration file from ./conf.ini ...")
-        
         dataSpiderConfig = dataSpider("conf.ini")
         print(dataSpiderConfig._configDic)
         print(dataSpiderConfig._configDic['sina']['url'])
         
           
+        
+       

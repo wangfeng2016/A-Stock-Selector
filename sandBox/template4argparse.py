@@ -2,8 +2,6 @@ import argparse
 import time
 import os
 import os.path
-parser = argparse.ArgumentParser(
-description='')
 
 parser = argparse.ArgumentParser(
 	formatter_class=argparse.RawDescriptionHelpFormatter,

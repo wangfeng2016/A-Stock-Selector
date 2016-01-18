@@ -8,7 +8,8 @@ _convertDictUnicode = lambda dictInst: dictInst
 
 from ConfigParser import RawConfigParser
 
-from utils.pathtools import *
+from sandBox.utils.pathtools import *
+
 import os
 import logging
 logger = logging.getLogger(__name__)
