@@ -77,19 +77,21 @@ if __name__ == '__main__':
         if dataSpiderConfig._configDic['debugMode']:
             print(dataSpiderConfig._configDic)
             print(dataSpiderConfig.logPath)
-        indexFile = os.path.join(dataSpiderConfig._configDic['basePath'], 'indexFile')
-        if os.path.exists(indexFile):
-            print("The default index file exists as indexFile")  
+        stockCode = os.path.join(dataSpiderConfig._configDic['basePath'], 'stockCode.csv')
+        if os.path.exists(stockCode):
+            print("The default stockCod file exists as ", stockCode)  
         else:
             tdxRoot = os.path.join(dataSpiderConfig._configDic['basePath'], 'tdxRoot')
+            if dataSpiderConfig._configDic['debugMode']:
+                print(tdxRoot)
             if os.path.exists(tdxRoot):
-                print("creating the index file")
+                print("creating the stockCode file as ", stockCode)
                 readStockCodeFromTDX(tdxRoot)
             else: 
                 print('tdxRoot does not exist, which is mandatory here. exiting...')
                 sys.exit()
         headers = ['code', 'name']
-        stockInfo = pandas.read_csv(os.path.join(dataSpiderConfig.logPath, 'indexFile'), header=None, names=headers)
+        stockInfo = pandas.read_csv(stockCode, header=None, names=headers)
         for code in stockInfo.code:
             downloadHistoryQuoteFile("ss"+str(code))
 
