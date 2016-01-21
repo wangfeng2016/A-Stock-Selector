@@ -77,7 +77,7 @@ if __name__ == '__main__':
         if dataSpiderConfig._configDic['debugMode']:
             print(dataSpiderConfig._configDic)
             print(dataSpiderConfig.logPath)
-        stockCode = os.path.join(dataSpiderConfig._configDic['basePath'], 'stockCode.csv')
+        stockCode = os.path.join(dataSpiderConfig._configDic['basePath'], 'dataRepository', 'stockCode.csv')
         if os.path.exists(stockCode):
             print("The default stockCod file exists as ", stockCode)  
         else:
