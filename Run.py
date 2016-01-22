@@ -13,20 +13,20 @@ import struct
 import pandas
 import json
 
-# Usage: call this function to download history data csv file from yahoo for specified stock code
-# Input parameter: e.g. sz000001 or ss600000
-def downloadHistoryQuoteFile(code, globalConfig):
+''' 
+Usage: call this function to download history data csv file from yahoo for specified stock code
+Input parameter: e.g. sz000001 or ss600000
+'''
+def downloadHistoryQuoteFile(code, debug=False, http_proxy=""):
     historyQuoteUrl = "http://table.finance.yahoo.com/table.csv?s=" + code[2:8] + "." + code[0:2] 
-    if globalConfig['debugMode']:
+    if debug:
         print(historyQuoteUrl)
     localFilename = code[2:8] + ".csv"
-    if globalConfig['debugMode']:
+    if debug:
         print("creating " + localFilename)
-    if globalConfig['http_proxy']: 
-        print(globalConfig['http_proxy'])
+    if http_proxy<>"":  
         proxy = {}
-        proxy['http'] = globalConfig['http_proxy'] 
-        print (proxy)
+        proxy['http'] = http_proxy         
     r = requests.get(historyQuoteUrl, stream=True, proxies=proxy)
     with open("./"+localFilename, 'wb') as f:
         for chunk in r.iter_content(chunk_size=1024):
@@ -36,8 +36,29 @@ def downloadHistoryQuoteFile(code, globalConfig):
         f.close()
     return localFilename
 
-# Usage: call this function to read all stock code from TDX software, and write to stockCode.csv
-# Input parameter: the directory where the TDX is installed
+''' 
+Usage: call this function to calculate the Moving Average: MA and append the value to the data csv file from yahoo for specified stock code
+Input parameter: e.g. sz000001 or ss600000
+'''
+def calculateMA(code):
+    fileName = convertOsPath(os.path.join(dataSpiderConfig._configDic['basePath'], (str(code) + '.csv')))
+    if os.path.exists(fileName):
+        stock_data = pandas.read_csv(fileName, parse_dates=[1])
+        stock_data.sort('Date', inplace=True)
+        ListMA = [5, 10, 20, 60]
+        for ma in ListMA:
+            stock_data['MA_' + str(ma)] = pandas.rolling_mean(stock_data['Close'], ma)
+            stock_data.sort('Date', ascending=False, inplace=True)
+            stock_data.to_csv('./sh600000_ma.csv', index=False)
+    else:
+        print (fileName + " does not exist, exiting")
+        sys.exit()
+    
+
+'''
+ Usage: call this function to read all stock code from TDX software, and write to stockCode.csv
+ Input parameter: the directory where the TDX is installed
+'''
 def readStockCodeFromTDX(tdxDir):
     fo = open('.\stockCode.csv', 'wb');
     fi = open(tdxDir+'\T0002\hq_cache\shex.tnf','rb')
@@ -85,7 +106,7 @@ if __name__ == '__main__':
         dataSpiderConfig = dataSpider("conf.ini")
         if dataSpiderConfig._configDic['debugMode']:
             print(dataSpiderConfig._configDic)
-            print(dataSpiderConfig.logPath)
+            
         stockCode = os.path.join(dataSpiderConfig._configDic['basePath'], 'dataRepository', 'stockCode.csv')
         if os.path.exists(stockCode):
             print("The default stockCod file exists as ", stockCode)  
@@ -102,7 +123,11 @@ if __name__ == '__main__':
         headers = ['code', 'name']
         stockInfo = pandas.read_csv(stockCode, header=None, names=headers)
         for code in stockInfo.code:
-            downloadHistoryQuoteFile("ss"+str(code), dataSpiderConfig._configDic)
+            fileName = convertOsPath(os.path.join(dataSpiderConfig._configDic['basePath'], (str(code) + '.csv')))
+            print (fileName)
+            if not os.path.exists(fileName):
+                downloadHistoryQuoteFile("ss"+str(code), False, dataSpiderConfig._configDic['http_proxy'])
+            calculateMA(code)
             sys.exit()    
           
         
