@@ -91,6 +91,7 @@ class dataSpider(object):
         conf['consoleLog'] = confParser.getboolean('global', 'consoleLog')
         conf['debugMode'] = confParser.getboolean('global', 'debugMode')
         conf['encoding'] = confParser.get('global', 'encoding')
+        conf['http_proxy'] = confParser.get('global', 'http_proxy')
         conf['configfile'] = os.path.abspath(filename)
         conf['basePath'] = os.path.abspath(convertOsPath(confParser.get('global', 'basePath')))
         if confParser.has_section('sina'):
