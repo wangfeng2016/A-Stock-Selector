@@ -11,13 +11,23 @@ import os.path
 import requests;
 import struct
 import pandas
+import json
 
 # Usage: call this function to download history data csv file from yahoo for specified stock code
 # Input parameter: e.g. sz000001 or ss600000
-def downloadHistoryQuoteFile(code):
+def downloadHistoryQuoteFile(code, debug=False):
     historyQuoteUrl = "http://table.finance.yahoo.com/table.csv?s=" + code[2:8] + "." + code[0:2] 
-    print historyQuoteUrl
-    localFilename = code + ".csv"
+    if debug:
+        print(historyQuoteUrl)
+    localFilename = code[2:8] + ".csv"
+    if debug:
+        print(localFilename)
+    #s = requests.Session()
+    #s.auth = ('cn001\z00103yd', 'Password34!')
+    #print (s.auth)
+    #proxies = {
+    #           "http": "http://140.231.192.162:8080",
+    #           }
     r = requests.get(historyQuoteUrl, stream=True)
     with open("./"+localFilename, 'wb') as f:
         for chunk in r.iter_content(chunk_size=1024):
@@ -93,8 +103,11 @@ if __name__ == '__main__':
         headers = ['code', 'name']
         stockInfo = pandas.read_csv(stockCode, header=None, names=headers)
         for code in stockInfo.code:
-            downloadHistoryQuoteFile("ss"+str(code))
-
+            if dataSpiderConfig._configDic['debugMode']:
+                downloadHistoryQuoteFile("ss"+str(code), True)
+            else:
+                downloadHistoryQuoteFile("ss"+str(code))
+            sys.exit()    
           
         
        
