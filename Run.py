@@ -11,7 +11,7 @@ import os.path
 import requests;
 import struct
 import pandas
-import json
+
 
 ''' 
 Usage: call this function to download history data csv file from yahoo for specified stock code
@@ -27,8 +27,10 @@ def downloadHistoryQuoteFile(code, debug=False, http_proxy=""):
     if http_proxy<>"":  
         proxy = {}
         proxy['http'] = http_proxy         
-    r = requests.get(historyQuoteUrl, stream=True, proxies=proxy)
-    with open("./"+localFilename, 'wb') as f:
+        r = requests.get(historyQuoteUrl, stream=True, proxies=proxy)
+    else:
+        r = requests.get(historyQuoteUrl, stream=True)
+    with open("./dataRepository/"+localFilename, 'wb') as f:
         for chunk in r.iter_content(chunk_size=1024):
             if chunk: 
                 f.write(chunk)
@@ -41,18 +43,23 @@ Usage: call this function to calculate the Moving Average: MA and append the val
 Input parameter: e.g. sz000001 or ss600000
 '''
 def calculateMA(code):
-    fileName = convertOsPath(os.path.join(dataSpiderConfig._configDic['basePath'], (str(code) + '.csv')))
+    fileName = convertOsPath(os.path.join(dataSpiderConfig._configDic['basePath'], 'dataRepository', (str(code) + '.csv')))
+    fileName_MA = convertOsPath(os.path.join(dataSpiderConfig._configDic['basePath'], 'dataRepository', (str(code)+ '_ma' + '.csv')))
+    
     if os.path.exists(fileName):
+        if os.path.exists(fileName_MA):
+            print ("600000_ma.csv already exist")
+            return "MA file exists"
         stock_data = pandas.read_csv(fileName, parse_dates=[1])
         stock_data.sort('Date', inplace=True)
         ListMA = [5, 10, 20, 60]
         for ma in ListMA:
             stock_data['MA_' + str(ma)] = pandas.rolling_mean(stock_data['Close'], ma)
             stock_data.sort('Date', ascending=False, inplace=True)
-            stock_data.to_csv('./sh600000_ma.csv', index=False)
+            stock_data.to_csv('./dataRepository/600000_ma.csv', index=False)
     else:
         print (fileName + " does not exist, exiting")
-        sys.exit()
+        return "Error: no fileName exists"
     
 
 '''
@@ -123,12 +130,11 @@ if __name__ == '__main__':
         headers = ['code', 'name']
         stockInfo = pandas.read_csv(stockCode, header=None, names=headers)
         for code in stockInfo.code:
-            fileName = convertOsPath(os.path.join(dataSpiderConfig._configDic['basePath'], (str(code) + '.csv')))
+            fileName = convertOsPath(os.path.join(dataSpiderConfig._configDic['basePath'],'dataRepository', (str(code) + '.csv')))
             print (fileName)
             if not os.path.exists(fileName):
-                downloadHistoryQuoteFile("ss"+str(code), False, dataSpiderConfig._configDic['http_proxy'])
-            calculateMA(code)
+                #downloadHistoryQuoteFile("ss"+str(code), False, dataSpiderConfig._configDic['http_proxy'])
+                downloadHistoryQuoteFile("ss"+str(code), False)
+            returnValue = calculateMA(code)
+            print (returnValue)
             sys.exit()    
-          
-        
-       
