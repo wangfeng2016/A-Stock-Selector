@@ -133,8 +133,8 @@ if __name__ == '__main__':
             fileName = convertOsPath(os.path.join(dataSpiderConfig._configDic['basePath'],'dataRepository', (str(code) + '.csv')))
             print (fileName)
             if not os.path.exists(fileName):
-                #downloadHistoryQuoteFile("ss"+str(code), False, dataSpiderConfig._configDic['http_proxy'])
-                downloadHistoryQuoteFile("ss"+str(code), False)
-            returnValue = calculateMA(code)
-            print (returnValue)
-            sys.exit()    
+                downloadHistoryQuoteFile("ss"+str(code), False, dataSpiderConfig._configDic['http_proxy'])
+                #downloadHistoryQuoteFile("ss"+str(code), False)
+            #returnValue = calculateMA(code)
+            #print (returnValue)
+            
