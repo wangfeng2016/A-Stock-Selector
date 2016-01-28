@@ -34,18 +34,12 @@ class dataSpider(object):
         '''Load and initialize the configuration from the given filename.'''
         self._configDic = self._readConfig(filename)
         self._configFilename = filename
-
-    reportPath = property(lambda self: os.path.join(self._configDic['basePath'],
-                                                    'reports'))
-    repositoryPath = property(lambda self: os.path.join(self._configDic['basePath'],
-                                                'repository'))
-    cachePath = property(lambda self: os.path.join(self._configDic['basePath'],
-                                                   'cache'))
-    profilePath = property(lambda self: os.path.join(self._configDic['basePath'],
-                                                     'profile'))
-    logPath = property(lambda self: os.path.join(self._configDic['basePath'],
-                                                 'log'))
-    debugMode = property(lambda self: self._configDic['debugMode'])
+        self.reportPath = os.path.join(self._configDic['basePath'],'reports')
+        self.repositoryPath = os.path.join(self._configDic['basePath'], 'repository')
+        self.cachePath = os.path.join(self._configDic['basePath'],'cache')
+        self.profilePath = os.path.join(self._configDic['basePath'],'profile')
+        self.logPath = os.path.join(self._configDic['basePath'], 'log')
+        self.debugMode = self._configDic['debugMode']
     
    
     def getLoggerConfig(self):
