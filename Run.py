@@ -131,10 +131,10 @@ if __name__ == '__main__':
         stockInfo = pandas.read_csv(stockCode, header=None, names=headers)
         for code in stockInfo.code:
             fileName = convertOsPath(os.path.join(dataSpiderConfig._configDic['basePath'],'dataRepository', (str(code) + '.csv')))
-            print (fileName)
+            
             if not os.path.exists(fileName):
-                downloadHistoryQuoteFile("ss"+str(code), False, dataSpiderConfig._configDic['http_proxy'])
-                #downloadHistoryQuoteFile("ss"+str(code), False)
+                #downloadHistoryQuoteFile("ss"+str(code), False, dataSpiderConfig._configDic['http_proxy'])
+                downloadHistoryQuoteFile("ss"+str(code), True)
             #returnValue = calculateMA(code)
             #print (returnValue)
             
