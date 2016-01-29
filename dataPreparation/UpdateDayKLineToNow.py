@@ -2,6 +2,7 @@ import pandas
 import re
 from utils.pathtools import *
 import datetime
+import shutil 
 
 
 
@@ -15,30 +16,36 @@ class data(object):
         self.now = datetime.datetime.now()
         self.debug = debug
         
-    def dataUpdatedToWhen(self):
+    def dataUpdatedToWhichDay(self):
         data = pandas.read_csv(self.fileName, parse_dates=['Date'])
-        data = data[['Date']]
         data.sort_values(by='Date', inplace=True)
+        lastUpdateToWhichDay = data.tail(1).loc[0].get_value('Date')
+        return lastUpdateToWhichDay
         
-        lastUpdatedTo=data.tail(1).loc[0].get_value('Date')
-        print(self.now.strftime("%Y-%m-%d"))
-        print(lastUpdatedTo.strftime("%Y-%m-%d"))
-        print(self.now - lastUpdatedTo)
-        
-        
+    def categoryDataToFolderByUpdateDay(self):
+        updatedToWhichDay = self.dataUpdatedToWhichDay().strftime("%Y%m%d")
+        folder = convertOsPath(os.path.join('../', 'dataRepository', updatedToWhichDay))
+        dest = os.path.join(folder, (os.path.basename(stockFile)))
+        if not os.path.exists(folder):
+            os.mkdir(folder)
+        if not os.path.exists(dest):
+            print("Move " + stockFile + " To " + dest)
+            shutil.move(stockFile,dest)
+            
     
 if __name__ == '__main__':
     repository= convertOsPath(os.path.join('../', 'dataRepository'))
-    print(repository)
     if not os.path.exists(repository):
         print("the repository does not exist, existing")
         sys.exit()
     re.compile("^[0-9]+\.csv$")    
     stockFiles=[]
-    for root, dirs, files in os.walk(repository):
-        for f in files:
-            if re.compile("^[0-9]+.csv$").match(f):
-                stockFiles.append(os.path.join(root,f))
+    for f in os.listdir(repository):
+        if re.compile("^[0-9]+.csv$").match(f) and os.path.isfile(os.path.join(repository,f)):
+            stockFiles.append(os.path.join(repository,f))
+    
     for stockFile in stockFiles:
-        print(data(stockFile).dataUpdatedToWhen())
-   
+        print(stockFile)
+        d = data(stockFile)
+        d.categoryDataToFolderByUpdateDay()
+        
