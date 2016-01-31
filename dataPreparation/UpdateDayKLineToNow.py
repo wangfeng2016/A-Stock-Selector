@@ -27,7 +27,7 @@ def downloadHistoryInPeriod(code, start, end):
         sVolumn = stockInfo[11]
         newline = sDate + "," + sOpen + "," + sHigh + "," + sLow + "," + sClose  + "," + sVolumn + "," + "0.0"
         stockInfoAdded.append(newline)
-    print stockInfoAdded
+    
     return stockInfoAdded
     
 class data(object):
@@ -42,9 +42,9 @@ class data(object):
     def dataUpdatedToWhichDay(self):
         data = pandas.read_csv(self.fileName, parse_dates=['Date'])
         data.sort_values(by='Date', inplace=True)
-        print(data.tail(1))
-        print(data.tail(1).shape)
-        lastUpdateToWhichDay = data.tail(1).loc[0].get_value('Date')
+        data = data.tail(1)
+        lastUpdateToWhichDay = data.iloc[0].get_value('Date')
+        print (lastUpdateToWhichDay)
         return datetime.datetime.strptime(lastUpdateToWhichDay.strftime("%Y%m%d"),"%Y%m%d")
         
     def categoryDataToFolderByUpdateDay(self, lastUpdateToWhichDay):
@@ -77,7 +77,10 @@ if __name__ == '__main__':
         print("Get the K-line data for " + stockFile + " from " + start +" to "+ end)
         code = os.path.splitext(os.path.basename(stockFile))[0]
         additionalKLineData = downloadHistoryInPeriod(code, start, end)
-        with open(stockFile, "a") as ap:
-            ap.write("\n".join(additionalKLineData))
-            ap.write("\n")
-            ap.close()
+        if additionalKLineData:
+            print ("the following data will be added:")
+            print additionalKLineData
+            with open(stockFile, "a") as ap:
+                ap.write("\n".join(additionalKLineData))
+                ap.write("\n")
+                ap.close()
