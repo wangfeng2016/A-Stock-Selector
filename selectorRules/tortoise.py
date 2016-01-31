@@ -26,10 +26,10 @@ class tortoise(object):
         data = pandas.read_csv(self.fileName, parse_dates=['Date'])
         data = data[['Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Adj Close']]
         data.sort_values(by='Date', inplace=True)
-        data_N1=data.tail(N2)
+        data_N2=data.tail(N2)
         if self.debug:
-            print(data_N1[["Date", "Low"]])
-        return min(data_N1['Low'])
+            print(data_N2[["Date", "Low"]])
+        return min(data_N2['Low'])
 
 if __name__ == '__main__':
     repository= convertOsPath(os.path.join('../', 'dataRepository'))
