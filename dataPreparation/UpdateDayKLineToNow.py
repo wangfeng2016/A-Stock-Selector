@@ -1,11 +1,8 @@
 import pandas
 import re
-from utils.pathtools import *
 import datetime
-import shutil 
 import requests
-import urllib, urllib2
-import time
+from utils.pathtools import *
 '''
 http://quotes.money.163.com/service/chddata.html?code=0601398&start=20150508&end=20150508
 '''
@@ -17,9 +14,7 @@ def downloadHistoryInPeriod(code, start, end):
     stockInfoAdded = []
     for line in lines:
         stockInfo = line.split(",", 14)    
-        #sDate = time.mktime(time.strptime(stockInfo[0], "%Y-%m-%d"))
         sDate = stockInfo[0]
-        sNumber = code
         sClose = stockInfo[3]
         sHigh = stockInfo[4]
         sLow = stockInfo[5]
