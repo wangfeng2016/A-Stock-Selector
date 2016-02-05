@@ -1,4 +1,8 @@
 # 
+
 *.pyc
+
 *.csv
+
 *.bak
+.gitignore
